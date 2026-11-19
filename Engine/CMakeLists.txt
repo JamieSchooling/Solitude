@@ -6,6 +6,7 @@ target_sources(${CORE_LIBRARY}
     PRIVATE
         "src/Core/Application.cpp" 
         "src/Rendering/Window.cpp"
+        "src/Core/EventSystem.cpp"
     PRIVATE
     FILE_SET HEADERS
     BASE_DIRS
@@ -15,7 +16,7 @@ target_sources(${CORE_LIBRARY}
         "include/Core/Application.h"
         "include/Core/Subsystem.h"
         "include/Solitude.h" 
-        "include/Rendering/Window.h")
+        "include/Rendering/Window.h" "include/Core/Event.h" "include/Core/EventSystem.h")
 
 target_include_directories(${CORE_LIBRARY}
     PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include"

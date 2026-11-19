@@ -1,0 +1,37 @@
+#include "Core/EventSystem.h"
+
+#include "Core/Event.h"
+
+void EventSystem::Start(const SubsystemParams& params)
+{
+}
+
+void EventSystem::Shutdown()
+{
+	m_listenerSystems.clear();
+}
+
+void EventSystem::AddListener(Subsystem& subsystem)
+{
+	m_listenerSystems.push_back(&subsystem);
+}
+
+void EventSystem::AddListener(Subsystem* subsystem)
+{
+	m_listenerSystems.push_back(subsystem);
+}
+
+void EventSystem::RemoveListener(Subsystem& subsystem)
+{
+	m_listenerSystems.erase(std::find(m_listenerSystems.begin(), m_listenerSystems.end(), &subsystem));
+}
+
+void EventSystem::DispatchEvent(Event& event)
+{
+	for (auto it = m_listenerSystems.rbegin(); it != m_listenerSystems.rend(); it++)
+	{
+		auto listener = *it;
+		listener->OnEvent(event);
+		if (event.Handled) break;
+	}
+}

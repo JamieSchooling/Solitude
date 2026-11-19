@@ -2,6 +2,8 @@
 
 #include "Solitude.h"
 
+#include "Core/Event.h"
+
 struct SLTD_API SubsystemParams {};
 
 class SLTD_API Subsystem
@@ -14,6 +16,8 @@ public:
 	virtual void OnAppUpdate() {}
 	virtual void PostAppUpdate() {}
 	virtual void FinaliseAppUpdate() {}
+
+	virtual void OnEvent(Event& event) {}
 protected:
 	Subsystem() = default;
 	~Subsystem() = default;

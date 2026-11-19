@@ -1,5 +1,6 @@
 #include "Core/Editor.h"
 
+#include <Core/EventSystem.h>
 #include <Rendering/Window.h>
 
 Application* CreateApplication()
@@ -9,6 +10,10 @@ Application* CreateApplication()
 
 void Editor::Initialise()
 {
+	{
+		AddSubsystem<EventSystem>(UpdatePhase::Always);
+	}
+
 	{
 		WindowProps props;
 		props.Title = "Solitude Editor";
@@ -30,4 +35,5 @@ void Editor::Run()
 void Editor::Shutdown()
 {
 	RemoveSubsystem<Window>();
+	RemoveSubsystem<EventSystem>();
 }

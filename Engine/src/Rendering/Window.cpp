@@ -5,6 +5,8 @@
 #include <GLFW/glfw3.h>
 
 #include <iostream>
+#include "Core/Event.h"
+#include "Core/EventSystem.h"
 
 void Window::Start(const SubsystemParams& params)
 {
@@ -42,6 +44,75 @@ void Window::Start(const SubsystemParams& params)
 	glViewport(0, 0, props.Width, props.Height);
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
+
+	glfwSetWindowCloseCallback(m_glfwInstance, [](GLFWwindow* window)
+	{
+		Event e;
+		e.Type = EventType::WindowClose;
+		EventSystem::Get().DispatchEvent(e);
+		if (e.Handled)
+		{
+			glfwSetWindowShouldClose(window, GLFW_FALSE);
+		}
+	});
+
+	glfwSetFramebufferSizeCallback(m_glfwInstance, [](GLFWwindow* window, int width, int height)
+	{
+		auto self = static_cast<Window*>(glfwGetWindowUserPointer(window));
+		glViewport(0, 0, width, height);
+		self->m_width = width;
+		self->m_height = height;
+		self->m_aspectRatio = self->m_width / self->m_height;
+
+		Event e;
+		e.Type = EventType::WindowResize;
+		e.WindowResizeArgs.Width = width;
+		e.WindowResizeArgs.Height = height;
+		EventSystem::Get().DispatchEvent(e);
+	});
+
+	glfwSetWindowPosCallback(m_glfwInstance, [](GLFWwindow* window, int x, int y)
+	{
+		Event e;
+		e.Type = EventType::WindowMove;
+		e.WindowMoveArgs.PosX = x;
+		e.WindowMoveArgs.PosY = y;
+		EventSystem::Get().DispatchEvent(e);
+	});
+
+	glfwSetWindowFocusCallback(m_glfwInstance, [](GLFWwindow* window, int focused)
+	{
+		Event e;
+		e.Type = focused == GLFW_TRUE ? EventType::WindowFocus : EventType::WindowFocusLost;
+		EventSystem::Get().DispatchEvent(e);
+	});
+
+	glfwSetKeyCallback(m_glfwInstance, [](GLFWwindow* window, int key, int scancode, int action, int mods)
+	{
+		Event e;
+		e.Type = EventType::InputKey;
+		e.InputKeyArgs.Key = key;
+		e.InputKeyArgs.Action = action;
+		EventSystem::Get().DispatchEvent(e);
+	});
+
+	glfwSetMouseButtonCallback(m_glfwInstance, [](GLFWwindow* window, int button, int action, int mods)
+	{
+		Event e;
+		e.Type = EventType::InputMouseButton;
+		e.InputMouseButtonArgs.Button = button;
+		e.InputMouseButtonArgs.Action = action;
+		EventSystem::Get().DispatchEvent(e);
+	});
+
+	glfwSetCursorPosCallback(m_glfwInstance, [](GLFWwindow* window, double xpos, double ypos)
+	{
+		Event e;
+		e.Type = EventType::InputMouseMove;
+		e.InputMouseMoveArgs.MouseX = xpos;
+		e.InputMouseMoveArgs.MouseY = ypos;
+		EventSystem::Get().DispatchEvent(e);
+	});
 }
 
 void Window::Shutdown()
