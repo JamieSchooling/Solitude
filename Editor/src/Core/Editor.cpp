@@ -3,12 +3,14 @@
 #include <Core/EventSystem.h>
 #include <Rendering/Window.h>
 
+#include "Core/ProjectManager.h"
+
 Application* CreateApplication()
 {
 	return new Editor();
 }
 
-void Editor::Initialise()
+void Editor::Bootstrap()
 {
 	{
 		AddSubsystem<EventSystem>(UpdatePhase::Always);
@@ -16,9 +18,32 @@ void Editor::Initialise()
 
 	{
 		WindowProps props;
-		props.Title = "Solitude Editor";
+		props.Title = "Solitude Editor - Project Manager";
 		AddSubsystem<Window>(UpdatePhase::Always, props);
 	}
+
+	ImGuiContext* ctx = Window::Get().InitImGui();
+
+	ImGui::SetCurrentContext(ctx);
+
+	std::filesystem::path projectPath;
+
+	ProjectManager projectManager;
+
+	projectManager.Initialise(projectPath);
+
+	while (!projectManager.IsProjectLoaded() && Window::Get().IsOpen())
+	{
+		PreUpdate();
+		Update();
+		projectManager.Update();
+		PostUpdate();
+		FinaliseUpdate();
+	}
+}
+
+void Editor::Initialise()
+{
 }
 
 void Editor::Run()

@@ -2,6 +2,7 @@
 
 #include "Solitude.h"
 
+#include <filesystem>
 #include <vector>
 
 #include "Subsystem.h"
@@ -23,9 +24,15 @@ class SLTD_API Application
 public:
 	void ExecuteLifecycle();
 
+	virtual void Bootstrap() {}
 	virtual void Initialise() = 0;
 	virtual void Run() = 0;
 	virtual void Shutdown() = 0;
+
+	static std::filesystem::path GetResourcePath();
+	static std::filesystem::path GetConfigPath();
+	static std::filesystem::path GetDataPath();
+	static std::filesystem::path GetExecutableDirectory();
 
 protected:
 	template<typename T, typename = std::enable_if_t<std::is_base_of<SingletonSubsystem<T>, T>::value>>

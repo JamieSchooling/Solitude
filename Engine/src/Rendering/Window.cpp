@@ -127,10 +127,17 @@ void Window::PreAppUpdate()
 
 	m_currentTime = glfwGetTime();
 	m_deltaTime = m_currentTime - m_prevFrameTime;
+
+	ImGui_ImplOpenGL3_NewFrame();
+	ImGui_ImplGlfw_NewFrame();
+	ImGui::NewFrame();
 }
 
 void Window::FinaliseAppUpdate()
 {
+	ImGui::Render();
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
 	m_prevFrameTime = m_currentTime; 
 	glFinish();
 	glfwSwapBuffers(m_glfwInstance);
@@ -166,4 +173,15 @@ void Window::SetCursorMode(CursorMode mode)
 		glfwSetInputMode(m_glfwInstance, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 		break;
 	}
+}
+
+ImGuiContext* Window::InitImGui()
+{
+	IMGUI_CHECKVERSION();
+	ImGuiContext* ctx = ImGui::CreateContext();
+
+	ImGui_ImplGlfw_InitForOpenGL(m_glfwInstance, true);
+	ImGui_ImplOpenGL3_Init("#version 460");
+
+	return ctx;
 }

@@ -6,6 +6,9 @@
 
 #include <string>
 
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_opengl3.h>
+
 struct GLFWwindow;
 
 struct SLTD_API WindowProps : public SubsystemParams
@@ -42,6 +45,8 @@ public:
 	inline float DeltaTime() const { return m_deltaTime; }
 
 	void SetCursorMode(CursorMode mode);
+
+	ImGuiContext* InitImGui();
 
 	inline GLFWwindow* GetGLFWInstance() { return m_glfwInstance; }
 private:
