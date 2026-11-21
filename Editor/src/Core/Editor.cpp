@@ -28,6 +28,14 @@ void Editor::Bootstrap()
 
 	std::filesystem::path projectPath;
 
+	/*for (auto arg : args)
+	{
+		if (ProjectManager::IsProjectFile(arg))
+		{
+			projectPath = arg;
+		}
+	}*/
+
 	ProjectManager projectManager;
 
 	projectManager.Initialise(projectPath);

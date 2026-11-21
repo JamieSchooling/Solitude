@@ -1,6 +1,6 @@
 # Solitude Engine
 
-## A cross-platform 3D game engine
+## A 3D game engine for Windows
 
 ![Screenshot of a 3D scene in the Solitude Editor](https://www.jamieschooling.dev/images/solace_scene_view.png)
 ##### (Above screenshot from a previous archived version of the engine, the current version does not look like this yet.)

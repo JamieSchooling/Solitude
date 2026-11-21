@@ -37,7 +37,15 @@ FetchContent_Declare(ziplib
 	GIT_PROGRESS TRUE
 )
 
-FetchContent_MakeAvailable(nfd zlib ziplib)
+set(REPROC++ ON)
+FetchContent_Declare(reproc++
+    GIT_REPOSITORY https://github.com/daandemeyer/reproc.git
+    GIT_TAG 14.2.8
+	GIT_SHALLOW TRUE
+	GIT_PROGRESS TRUE
+)
+
+FetchContent_MakeAvailable(nfd zlib ziplib reproc++)
 
 add_library(ZipLib STATIC
     ${ziplib_SOURCE_DIR}/Source/ZipLib/EndOfCentralDirectoryBlock.cpp
@@ -57,7 +65,12 @@ target_link_libraries(ZipLib PUBLIC zlibstatic)
 target_link_libraries(${APPLICATION} PUBLIC ${CORE_LIBRARY})
 target_link_libraries(${APPLICATION} PRIVATE nfd)
 target_link_libraries(${APPLICATION} PRIVATE ZipLib)
+target_link_libraries(${APPLICATION} PRIVATE reproc++)
 
 add_custom_command(TARGET "${APPLICATION}" POST_BUILD 
     COMMAND ${CMAKE_COMMAND} -E copy 
     $<TARGET_FILE:${CORE_LIBRARY}> $<TARGET_FILE_DIR:${APPLICATION}>/)
+
+add_custom_command(TARGET "${APPLICATION}" POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_CURRENT_SOURCE_DIR}/resources $<TARGET_FILE_DIR:${APPLICATION}>/resources)

@@ -92,9 +92,28 @@ private:
 
 	add_library(${GAME} SHARED)
 
-	file(GLOB_RECURSE sources CGONFIGURE_DEPENDS "[PROJECT_ASSET_PATH]/*.cpp" "[PROJECT_ASSET_PATH]/*.h")
+	file(GLOB_RECURSE sources CONFIGURE_DEPENDS "[PROJECT_ASSET_PATH]/*.cpp" "[PROJECT_ASSET_PATH]/*.h")
 	target_sources(${GAME} PRIVATE ${sources})
 
-	set_property(TARGET ${GAME} PROPERTY CXX_STANDARD 20)
+	set_target_properties(${GAME} PROPERTIES
+		CXX_STANDARD 20
+		RUNTIME_OUTPUT_DIRECTORY "[PROJECT_LIBRARY_PATH]/$<0:>"
+	)
 	)CMAKE";
+
+	const char* m_sampleHeaderTemplate = R"SCRIPT(
+	#pragma once
+
+	#include <iostream>
+	)SCRIPT";
+
+	const char* m_sampleScriptTemplate = R"SCRIPT(
+	#include "SampleScript.h"
+
+	int main()
+	{
+		std::cout << "Hello Solitude." << std::endl;
+		return 0;
+	}
+	)SCRIPT";
 };
